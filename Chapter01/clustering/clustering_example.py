@@ -4,41 +4,40 @@ import pandas as pd
 import matplotlib.pyplot as plt
 plt.rcParams.update({'font.size': 22})
 import datetime
-from numpy.random import MT19937
-from numpy.random import RandomState, SeedSequence
-rs = RandomState(MT19937(SeedSequence(123456789)))
+
 
 # Define simulate ride data function
-def simulate_ride_distances():
+def simulate_ride_distances(rng):
     logging.info('Simulating ride distances ...')
     ride_dists = np.concatenate(
         (
-            10 * np.random.random(size=370),
-            30 * np.random.random(size=10),  # long distances
-            10 * np.random.random(size=10),  # same distance
-            10 * np.random.random(size=10)  # same distance
+            10 * rng.random(size=370),
+            30 * rng.random(size=10),  # long distances
+            10 * rng.random(size=10),  # same distance
+            10 * rng.random(size=10)  # same distance
         )
     )
     return ride_dists
 
-def simulate_ride_speeds():
+def simulate_ride_speeds(rng):
     logging.info('Simulating ride speeds ...')
     ride_speeds = np.concatenate(
         (
-            np.random.normal(loc=30, scale=5, size=370),
-            np.random.normal(loc=30, scale=5, size=10), # same speed
-            np.random.normal(loc=50, scale=10, size=10), # high speed
-            np.random.normal(loc=15, scale=4, size=10) #low speed
+            rng.normal(loc=30, scale=5, size=370),
+            rng.normal(loc=30, scale=5, size=10), # same speed
+            rng.normal(loc=50, scale=10, size=10), # high speed
+            rng.normal(loc=15, scale=4, size=10) #low speed
         )
     )
     return ride_speeds
 
 
-def simulate_ride_data():
+def simulate_ride_data(seed=123456789):
     logging.info('Simulating ride data ...')
+    rng = np.random.default_rng(seed)
     # Simulate some ride data ...
-    ride_dists = simulate_ride_distances()
-    ride_speeds = simulate_ride_speeds()
+    ride_dists = simulate_ride_distances(rng)
+    ride_speeds = simulate_ride_speeds(rng)
     ride_times = ride_dists/ride_speeds
 
     # Assemble into Data Frame
